@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
@@ -36,12 +37,43 @@ public class Train {
         stop = System.currentTimeMillis();
         System.out.println("time: " + (stop - start) + " ms");
 
+        // max value for labels
+        int maxValue = 0;
+        for (int v : target){
+        	if (v > maxValue) maxValue = v;
+        }
+        
+        for (int v : prob.y){
+        	if (v > maxValue) maxValue = v;
+        }
+        
+        int[][] classifMatrix = new int[maxValue+1][maxValue+1];
+        
         int total_correct = 0;
-        for (int i = 0; i < prob.l; i++)
+        
+        for (int i = 0; i < prob.l; i++) {
             if (target[i] == prob.y[i]) ++total_correct;
-
+            // store in matrix
+            classifMatrix[target[i]][prob.y[i]]++;
+        }
+        
         System.out.printf("correct: %d%n", total_correct);
         System.out.printf("Cross Validation Accuracy = %g%%%n", 100.0 * total_correct / prob.l);
+        
+        // display matrix
+        System.out.printf("Classification Matrix : \n\n");
+        for (int i = 0; i <= maxValue; i++){
+        	int[] hits = classifMatrix[i];
+        	StringBuffer buffer = new StringBuffer();
+        	buffer.append(i).append("\t: ");
+        	for (int j = 0 ; j < hits.length; j++){
+        		buffer.append("\t");
+        		if (i==j) buffer.append("*");
+        		buffer.append(hits[j]);
+        		if (i==j) buffer.append("*");
+        	}
+        	System.out.println(buffer.toString());
+        }
     }
 
     private void exit_with_help() {
