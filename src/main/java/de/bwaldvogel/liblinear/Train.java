@@ -81,6 +81,20 @@ public class Train {
 			}
 			System.out.println(buffer.toString());
 		}
+		
+		// get accuracy per type
+		System.out.printf("\n\nAccuracy per label : \n\n");
+		for (int i = 0; i <= maxValue; i++) {
+			int[] hits = classifMatrix[i];
+			float sum = 0;
+			for (int h :hits){
+				sum+=h;
+			}
+			float success = hits[i];
+			float accuracy = 100 * success / sum;
+			System.out.println(i+"\t:\t"+accuracy);
+		}
+		
 	}
 
 	private void exit_with_help() {
