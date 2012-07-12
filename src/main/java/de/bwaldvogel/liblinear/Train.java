@@ -29,17 +29,17 @@ public class Train {
 	private Problem prob = null;
 
 	private void do_cross_validation() {
-		int[] target = new int[prob.l];
+		int[] predicted = new int[prob.l];
 
 		long start, stop;
 		start = System.currentTimeMillis();
-		Linear.crossValidation(prob, param, nr_fold, target);
+		Linear.crossValidation(prob, param, nr_fold, predicted);
 		stop = System.currentTimeMillis();
 		System.out.println("time: " + (stop - start) + " ms");
 
 		// max value for labels
 		int maxValue = 0;
-		for (int v : target) {
+		for (int v : predicted) {
 			if (v > maxValue)
 				maxValue = v;
 		}
@@ -54,10 +54,10 @@ public class Train {
 		int total_correct = 0;
 
 		for (int i = 0; i < prob.l; i++) {
-			if (target[i] == prob.y[i])
+			if (predicted[i] == prob.y[i])
 				++total_correct;
 			// store in matrix
-			classifMatrix[target[i]][prob.y[i]]++;
+			classifMatrix[prob.y[i]][predicted[i]]++;
 		}
 
 		System.out.printf("correct: %d%n", total_correct);
